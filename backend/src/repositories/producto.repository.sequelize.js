@@ -1,4 +1,4 @@
-const ProductoModel = require('../models/Producto.model');
+const ProductoModel = require('../models/producto.model');
 
 class ProductoRepositorySequelize {
     async guardar(datos) {
