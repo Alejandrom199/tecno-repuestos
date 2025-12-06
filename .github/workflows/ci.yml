@@ -1,6 +1,5 @@
-name: Pruebas integración continua
+name: Pruebas CI
 
-# Se ejecuta cada vez que haces un push a la rama main
 on:
   push:
     branches: [ main ]
@@ -10,6 +9,10 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
     - name: Descargar código (Checkout)
