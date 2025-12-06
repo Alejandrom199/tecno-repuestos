@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { connectDB } = require('./config/db'); // Solo importamos la función de conexión
-const productoRoutes = require('./routes/Producto.route');
+const productoRoutes = require('./routes/producto.route');
 
 const app = express();
 

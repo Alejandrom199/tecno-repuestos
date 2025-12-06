@@ -1,23 +1,14 @@
 const request = require('supertest');
-
 const app = require('../../src/app');
 const { sequelize } = require('../../src/config/db');
 
-// Antes de las pruebas
+// Setup de Conexión (Igual que antes)
 beforeAll(async () => {
-    // Solo intentamos conectar si sequelize existe (Modo SQL)
-    if (sequelize) {
-        await sequelize.authenticate();
-        // await sequelize.sync({ force: true });
-    }
+    if (sequelize) await sequelize.authenticate();
 });
 
-// Al terminar
 afterAll(async () => {
-    // Solo cerramos conexión si existe
-    if (sequelize) {
-        await sequelize.close();
-    }
+    if (sequelize) await sequelize.close();
 });
 
 describe('Integración: API Productos', () => {
@@ -34,12 +25,16 @@ describe('Integración: API Productos', () => {
             .post('/api/productos')
             .send(nuevoProducto);
 
+        if(response.statusCode === 500) console.log('Error: ', JSON.stringify(response.body, null, 2))
+
         expect(response.statusCode).toBe(201);
-        // Asegúrate de que tu Controller devuelva "Éxito" con tilde, si no cámbialo aquí
-        expect(response.body.mensaje).toContain('xito'); 
-        expect(response.body.producto.nombre).toBe(nuevoProducto.nombre);
-        // Verificar que tiene ID (significa que vino de la BD)
-        expect(response.body.producto.id).toBeDefined();
+        
+        // Ahora el mensaje está en .message (definido en utils/response.js)
+        expect(response.body.message).toContain('xito'); // Busca "éxito" o "Exito"
+        
+        // Ahora el producto creado está dentro de .data
+        expect(response.body.data.nombre).toBe(nuevoProducto.nombre);
+        expect(response.body.data.id).toBeDefined();
     });
 
     test('POST /api/productos -> Debe devolver 400 si el precio es negativo', async () => {
@@ -53,19 +48,21 @@ describe('Integración: API Productos', () => {
             .post('/api/productos')
             .send(productoMalo);
 
-        // Esperamos el Bad Request que programamos en el Controller
         expect(response.statusCode).toBe(400);
-        // Verificamos que el mensaje de error contenga la palabra clave
-        expect(response.body.error).toContain('no pueden ser negativos');
+        
+        expect(response.body.message).toContain('no pueden ser negativos');
+        
+        // También podemos verificar que la bandera error sea true
+        expect(response.body.error).toBe(true);
     });
 
     test('GET /api/productos -> Debe devolver un array JSON y estado 200', async () => {
         const response = await request(app).get('/api/productos');
 
         expect(response.statusCode).toBe(200);
-        // Debe ser un arreglo (Array)
-        expect(Array.isArray(response.body)).toBe(true);
-        // Como creamos uno en el test anterior, el array debe tener al menos 1 elemento
-        expect(response.body.length).toBeGreaterThan(0);
+        
+        // La lista de productos está dentro de .data
+        expect(Array.isArray(response.body.data)).toBe(true);
+        expect(response.body.data.length).toBeGreaterThan(0);
     });
 });

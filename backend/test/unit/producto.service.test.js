@@ -1,4 +1,4 @@
-const productoService = require('../../src/services/Producto.service');
+const productoService = require('../../src/services/producto.service');
 // YA NO importamos el Modelo, importamos el Repositorio
 const { productoRepository } = require('../../src/repositories/index');
 
