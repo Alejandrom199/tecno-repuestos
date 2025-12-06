@@ -15,7 +15,7 @@ if (DB_TYPE === 'memory') {
     console.log(`Repository: Usando Sequelize (${DB_TYPE})`);
     
     // Cargamos el modelo primero para asegurar que existe
-    require('../models/Producto.model'); 
+    require('../models/producto.model'); 
     
     // Cargamos el repositorio SQL
     const ProductoRepositorySequelize = require('./producto.repository.sequelize');
