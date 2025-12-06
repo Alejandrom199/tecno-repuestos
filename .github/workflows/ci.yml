@@ -7,6 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
+
   build-and-test:
     runs-on: ubuntu-latest
     
@@ -28,3 +29,6 @@ jobs:
 
     - name: Ejecutar pruebas
       run: npm test
+
+    - name: Verificar construcción de Docker
+      run: docker build -t mi-app-test .
