@@ -1,5 +1,5 @@
 # 1. Imagen base
-FROM node:18-alpine
+FROM node:20-alpine
 
 # 2. Carpeta de trabajo
 WORKDIR /app
