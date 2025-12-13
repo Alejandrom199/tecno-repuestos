@@ -1,10 +1,11 @@
 {
   "scripts": {
-    "test": "jest",
+    "test": "cross-env DB_TYPE=memory jest",
     "start": "node src/app.js",
     "dev": "node --watch src/app.js"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "jest": "^30.2.0",
     "supertest": "^7.1.4"
   },
