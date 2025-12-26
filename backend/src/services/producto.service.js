@@ -1,53 +1,63 @@
-// IMPORTANTE: Importamos el repositorio, NO el modelo
 const { productoRepository } = require('../repositories/index');
+const logService = require('./log.service');
 
 const productoService = {
-
-    registrarProducto: async (datos) => {
-        // Validaciones de Negocio
-        if (datos.precio < 0 || datos.stock < 0) {
-            throw new Error('RN-03: El precio y el stock no pueden ser negativos.');
-        }
-        // Delegamos al repo
-        return await productoRepository.guardar(datos);
-    },
-
+    
     listarProductos: async () => {
-        return await productoRepository.listar();
+        const productos = await productoRepository.listar();
+
+        return productos.map(producto => {
+            const {creadoPor, ValidadoEn, ...data} = producto;
+            return data;
+        });
     },
 
     obtenerPorId: async (id) => {
         const producto = await productoRepository.buscarPorId(id);
-        if (!producto) {
-            throw new Error('Producto no encontrado');
-        }
-        return producto;
+        if (!producto) throw new Error('Producto no encontrado');
+
+        const { creadoPor, validadoEn, ...data } = producto;
+        return data;
+    },
+
+    registrarProducto: async (datos, usuarioEjecutor) => {
+        const existe = await productoRepository.buscarPorNombre(datos.nombre);
+        if (existe) throw new Error('RN-01: Ya existe un producto con este nombre.');
+
+        const nuevo = await productoRepository.guardar(datos);
+        
+        const { creadoPor, validadoEn, ...data } = nuevo;
+        return data;
     },
 
     actualizarProducto: async (id, nuevosDatos) => {
-        // Verificamos existencia primero
-        const producto = await productoRepository.buscarPorId(id);
-        if (!producto) {
-            throw new Error('Producto no encontrado');
-        }
+        const productoExistente = await productoRepository.buscarPorId(id);
 
-        // Validaciones de Negocio
-        if (nuevosDatos.precio < 0 || nuevosDatos.stock < 0) {
-            throw new Error('RN-03: No se permiten valores negativos.');
-        }
+        if (!productoExistente) throw new Error('Producto no encontrado');
 
-        return await productoRepository.actualizar(id, nuevosDatos);
+        if (productoExistente.categoria === 'Salud' && nuevosDatos.stock < 5) throw new Error('RN-02: Los productos de Salud deben mantener un stock mínimo de seguridad de 5 unidades.');
+
+        if (nuevosDatos.precio < (productoExistente.precio * 0.5)) throw new Error('RN-03: El nuevo precio representa una rebaja mayor al 50%. Requiere autorización administrativa.');
+
+        const actualizado = await productoRepository.actualizar(id, nuevosDatos);
+
+        const {creadoPor, ValidadoEn, ...data} = actualizado;
+
+        return data;
     },
 
     eliminarProducto: async (id) => {
         const producto = await productoRepository.buscarPorId(id);
-        if (!producto) {
-            throw new Error('Producto no encontrado');
-        }
+        
+        if (!producto) throw new Error('Producto no encontrado');
 
-        await productoRepository.eliminar(id);
-        return { mensaje: 'Producto deshabilitado correctamente (Borrado Lógico)' };
+        if (producto.stock > 0) throw new Error(`RN-04: No se puede eliminar el producto "${producto.nombre}" porque aún tiene ${producto.stock} unidades en stock.`);
+
+        const desactivado = await productoRepository.desactivar(id);
+
+        return { id: desactivado.id, activo: false };
     }
+
 };
 
 module.exports = productoService;

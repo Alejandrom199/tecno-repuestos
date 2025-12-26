@@ -12,13 +12,31 @@ class ProductoRepositoryMemory {
         return this.bd.filter(p => p.activo === true);
     }
     async buscarPorId(id) {
-        return this.bd.find(p => p.id === Number(id)) || null;
+        const producto = this.bd.find(p => p.id === Number(id));
+
+        if (producto && producto.activo === true) {
+            return producto;
+        }
+
+        return null;
+    }
+
+    async buscarPorNombre(nombre) {
+        return this.bd.find(p => p.nombre.toLowerCase() === nombre.toLowerCase()) || null;
     }
     async actualizar(id, datos) {
         const index = this.bd.findIndex(p => p.id === Number(id));
         if (index === -1) return null;
         this.bd[index] = { ...this.bd[index], ...datos };
         return this.bd[index];
+    }
+    async desactivar(id){
+        const index = this.bd.findIndex(p => p.id === Number(id))
+        if(index !== -1){
+            this.bd[index].activo = false;
+            return this.bd[index];
+        }
+        return null;
     }
     async eliminar(id) {
         const index = this.bd.findIndex(p => p.id === Number(id));
@@ -28,5 +46,6 @@ class ProductoRepositoryMemory {
         }
         return false;
     }
+
 }
 module.exports = ProductoRepositoryMemory;

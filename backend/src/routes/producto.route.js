@@ -3,10 +3,17 @@ const router = express.Router();
 
 const productoController = require('../controllers/producto.controller');
 
-router.post('/', productoController.crearProducto);
+const validarProducto = require('../middlewares/validador.middleware');
+const auth = require('../middlewares/auth.middleware')
+
+
 router.get('/', productoController.obtenerProductos);
 router.get('/:id', productoController.obtenerProductoPorId);
-router.put('/:id', productoController.actualizarProducto);
-router.delete('/:id', productoController.eliminarProducto);
+
+router.post('/', auth, validarProducto, productoController.crearProducto);
+
+router.put('/:id', auth, validarProducto, productoController.actualizarProducto);
+
+router.delete('/:id', auth, productoController.eliminarProducto);
 
 module.exports = router;
