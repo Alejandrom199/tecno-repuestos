@@ -31,6 +31,8 @@ jobs:
 
     - name: Ejecutar pruebas
       run: npm test
+      env:
+        JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_key' }}
   
   # Despliegue
   deploy:
@@ -57,5 +59,9 @@ jobs:
 
     - name: Construir y Subir Imagen Docker
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:latest .
+        # Construimos la imagen con ambos tags al mismo tiempo para evitar errores
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:latest -t ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:1.0.0 .
+        
+        # Subimos ambos tags
         docker push ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:1.0.0
