@@ -1,4 +1,7 @@
 {
+  "name": "tecno-repuestos",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
     "test": "cross-env DB_TYPE=memory jest",
     "start": "node src/app.js",
