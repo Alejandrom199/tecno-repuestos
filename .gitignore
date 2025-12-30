@@ -14,4 +14,4 @@ backend/.env
 .DS_Store
 coverage/
 dist/
-*.log
+*.log.env*
