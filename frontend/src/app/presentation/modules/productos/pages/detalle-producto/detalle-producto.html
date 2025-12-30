@@ -1,0 +1,45 @@
+<div class="detalle-container">
+  <div class="detalle-header">
+    <h3>Detalles del Repuesto</h3>
+    <span class="id-tag">ID: #{{ producto.id }}</span>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-item full-width">
+      <label>Nombre del Producto</label>
+      <p class="valor-nombre">{{ producto.nombre }}</p>
+    </div>
+
+    <div class="info-item full-width">
+        <label>Categoria</label>
+        <div class="description-box">
+            {{ producto.categoria || 'Sin categoria disponible.' }}
+        </div>
+    </div>
+
+    <div class="info-item full-width">
+      <label>Descripción</label>
+      <div class="description-box">
+        {{ producto.descripcion || 'Sin descripción disponible.' }}
+      </div>
+    </div>
+
+    <div class="info-item">
+      <label>Precio Unitario</label>
+      <p class="price-value">{{ producto.precio | currency }}</p>
+    </div>
+
+    <div class="info-item">
+      <label>Stock Disponible</label>
+      <div class="stock-display">
+        <span class="stock-badge" [ngClass]="producto.stock <= 5 ? 'critical' : 'normal'">
+          {{ producto.stock }} unidades
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-actions">
+    <button class="btn-close" (click)="cerrar.emit()">Cerrar Vista</button>
+  </div>
+</div>

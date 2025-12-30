@@ -1,0 +1,39 @@
+.visor-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin: 1rem;
+    border: none; // Asegura que el contenedor no tenga borde extra
+
+    h2 {
+        color: #2c3e50;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+.tabla-logs {
+  width: 100%;
+  border-collapse: collapse; // Une los bordes en una sola línea
+  margin-top: 1rem;
+
+  th {
+    background-color: #f4f7f6;
+    color: #455a64;
+    padding: 12px;
+    border-bottom: 2px solid #cfd8dc; // Borde más grueso para el cabezal
+    text-align: left;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #eceff1; // Borde sutil entre filas
+    color: #37474f;
+  }
+
+  tr:hover {
+    background-color: #f9fbfb; // Efecto visual al pasar el mouse
+  }
+}

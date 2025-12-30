@@ -1,0 +1,14 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="brand">TECNO-REPUESTOS</div>
+    <div class="nav-links">
+      <a routerLink="/p/productos" routerLinkActive="active-link">Inventario</a>
+      <a routerLink="/p/auditoria" routerLinkActive="active-link">Auditoría</a>
+    </div>
+    <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+  </nav>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

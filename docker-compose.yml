@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    env_file: .env.production
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - db_net # Red Privada
+
+  backend:
+    build: ./backend
+    container_name: api_backend
+    restart: always
+    depends_on:
+      - db
+    env_file: .env.production
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+    networks:
+      - db_net   # Habla con DB
+      - public_net # Habla con Frontend
+
+  frontend:
+    build:
+          context: .                   # IMPORTANTE: Ahora el contexto es la raíz (donde está nginx.conf)
+          dockerfile: frontend/Dockerfile # Pero el Dockerfile sigue en su carpeta
+    restart: always
+    ports:
+      - "8080:80"
+    # QUITAMOS la sección de volumes de aquí
+    depends_on:
+      - backend
+    networks:
+      - public_net
+
+networks:
+  db_net:
+    internal: true # No tiene acceso a internet, solo local entre contenedores
+  public_net:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -1,0 +1,55 @@
+<div class="form-container">
+  <h2>Editar Repuesto</h2>
+  <form (ngSubmit)="guardar()" #editForm="ngForm">
+    
+    <div class="form-group">
+      <label for="nombre">Nombre del Repuesto</label>
+      <input 
+        id="nombre"
+        type="text" 
+        name="nombre" 
+        [(ngModel)]="productoParaEditar.nombre" 
+        #nombreModel="ngModel"
+        placeholder="Ej: Kit de Embrague" 
+        required>
+      @if (nombreModel.invalid && nombreModel.touched) {
+        <small class="error-text">El nombre es obligatorio</small>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="categoria">Categoría</label>
+      <select id="categoria" name="categoria" [(ngModel)]="productoParaEditar.categoria" required>
+        <option value="" disabled selected>Seleccione una categoría</option>
+        <option value="Monitores">Monitores</option>
+        <option value="Periféricos">Periféricos</option>
+        <option value="Hardware">Hardware</option>
+        <option value="Repuestos">Repuestos</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <textarea id="descripcion" name="descripcion" [(ngModel)]="productoParaEditar.descripcion" placeholder="Detalles del producto (marca, compatibilidad...)"></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="precio">Precio ($)</label>
+        <input id="precio" type="number" name="precio" [(ngModel)]="productoParaEditar.precio" step="0.01" min="0" placeholder="0.00" required>
+      </div>
+
+      <div class="form-group">
+        <label for="stock">Stock Inicial</label>
+        <input id="stock" type="number" name="stock" [(ngModel)]="productoParaEditar.stock" min="0" placeholder="0" required>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <button type="submit" class="btn-primary" [disabled]="!editForm.valid || loading">
+        {{ loading ? 'Guardando...' : 'Guardar en Sistema' }}
+      </button>
+      <button type="button" class="btn-secondary" (click)="cancelarOperacion()">Cancelar</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,31 @@
+<div class="visor-container">
+  <h2>Registro de Auditoría</h2>
+
+  @if (logs$ | async; as lista) {
+    <table class="tabla-logs">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Acción</th>
+          <th>Fecha y Hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of lista; track $index) {
+          <tr>
+            <td>
+              <span class="user-badge">{{ log.usuario }}</span>
+            </td>
+            <td><code>{{ log.accion }}</code></td>
+            <td class="date-cell">{{ log.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3" class="empty-state">No hay registros de auditoría.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="loading">Cargando registros...</p>
+  }
+</div>

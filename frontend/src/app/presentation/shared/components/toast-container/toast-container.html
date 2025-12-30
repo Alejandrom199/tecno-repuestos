@@ -1,0 +1,13 @@
+<div class="toast-wrapper">
+  @for (toast of (toastService.toasts$ | async); track toast.id) {
+    <div class="toast" [ngClass]="toast.type" (click)="toastService.remove(toast.id)">
+      <div class="icon">
+        @if (toast.type === 'error') { ⚠️ }
+        @else if (toast.type === 'success') { ✅ }
+        @else { ℹ️ }
+      </div>
+      <div class="message">{{ toast.text }}</div>
+      <button class="close">&times;</button>
+    </div>
+  }
+</div>

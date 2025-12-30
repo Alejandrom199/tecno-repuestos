@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../src/app');
-const { sequelize } = require('../../src/config/db');
+const { sequelize, connectDB } = require('../../src/config/db');
 const jwt = require('jsonwebtoken');
 
 // Definimos una clave y un Token de prueba

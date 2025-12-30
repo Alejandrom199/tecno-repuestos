@@ -14,6 +14,9 @@ const Producto = sequelize.define('Producto', {
     categoria: {
         type: DataTypes.STRING
     },
+    descripcion: {
+        type: DataTypes.STRING
+    },
     precio: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,

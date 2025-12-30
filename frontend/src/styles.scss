@@ -1,0 +1,11 @@
+// Configuraciones básicas para que no haya márgenes raros
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f7f6; // Un gris claro profesional
+}
+
+* {
+  box-sizing: border-box;
+}

@@ -1,0 +1,92 @@
+<div class="inventory-wrapper">
+  <div class="header-section">
+    <h2>Inventario de Repuestos</h2>
+    <button class="add-btn" (click)="mostrarModalCrear = true">+ Nuevo Producto</button>
+  </div>
+
+  @if (mostrarModalDetalle) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <button class="close-x" (click)="mostrarModalDetalle = false">&times;</button>
+      <app-detalle-producto 
+        [producto]="productoSeleccionado" 
+        (cerrar)="mostrarModalDetalle = false">
+      </app-detalle-producto>
+    </div>
+  </div>
+}
+
+  @if (mostrarModalCrear) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+        <button class="close-x" (click)="mostrarModalCrear = false">&times;</button>
+        <app-crear-producto 
+          (productoCreado)="onOperacionExitosa()" 
+          (cancelar)="mostrarModalCrear = false">
+        </app-crear-producto>
+      </div>
+    </div>
+  }
+
+  @if (mostrarModalEditar) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+        <button class="close-x" (click)="mostrarModalEditar = false">&times;</button>
+        <app-editar-producto 
+          [productoParaEditar]="productoSeleccionado" 
+          (productoEditado)="onOperacionExitosa()" 
+          (cancelar)="mostrarModalEditar = false">
+        </app-editar-producto>
+      </div>
+    </div>
+  }
+
+  @if (mostrarModalEliminar) {
+  <app-eliminar-producto 
+    [productoId]="productoSeleccionado?.id"
+    [productoNombre]="productoSeleccionado?.nombre"
+    [productoStock]="productoSeleccionado?.stock" 
+    (confirmado)="onOperacionExitosa()"
+    (cancelar)="mostrarModalEliminar = false">
+  </app-eliminar-producto>
+}
+
+<app-toast-container></app-toast-container>
+
+  <div class="table-container">
+    @if (loading) {
+      <p class="loading-text">Cargando inventario...</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of productos; track item.id) {
+            <tr>
+              <td><strong>{{ item.nombre }}</strong></td>
+              <td>
+                <span [class]="item.stock > 5 ? 'badge success' : 'badge warning'">
+                  {{ item.stock }} uds
+                </span>
+              </td>
+              <td>{{ item.precio | currency }}</td>
+              <td>
+                <button class="icon-btn view" (click)="abrirDetalles(item)">👁️</button>
+                <button class="icon-btn edit" (click)="abrirEditar(item)">✏️</button>
+                <button class="icon-btn delete" (click)="abrirEliminar(item)">🗑️</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="empty">No hay repuestos registrados.</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

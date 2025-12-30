@@ -32,6 +32,7 @@ jobs:
     - name: Ejecutar pruebas
       run: npm test
       env:
+        DB_TYPE: memory
         JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_key' }}
   
   # Despliegue
@@ -43,10 +44,9 @@ jobs:
     # Solo corre si es la rama main (evita correr en Pull Requests)
     if: github.ref == 'refs/heads/main'
 
-    defaults:
-      run:
-        working-directory: ./backend
-    
+    env:
+      APP_VERSION: 1.1.0
+
     steps:
     - name: Descargar código (Checkout)
       uses: actions/checkout@v3
@@ -57,11 +57,19 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Construir y Subir Imagen Docker
+    - name: Build & Push Backend
       run: |
-        # Construimos la imagen con ambos tags al mismo tiempo para evitar errores
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:latest -t ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:1.0.0 .
-        
-        # Subimos ambos tags
-        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-repuestos:1.0.0
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/tecno-back:latest \
+                      -t ${{ secrets.DOCKER_USERNAME }}/tecno-back:${{ env.APP_VERSION }} \
+                      ./backend
+        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-back:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-back:${{ env.APP_VERSION }}
+
+
+    - name: Build & Push Frontend
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/tecno-front:latest \
+                      -t ${{ secrets.DOCKER_USERNAME }}/tecno-front:${{ env.APP_VERSION }} \
+                      ./frontend
+        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-front:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/tecno-front:${{ env.APP_VERSION }}

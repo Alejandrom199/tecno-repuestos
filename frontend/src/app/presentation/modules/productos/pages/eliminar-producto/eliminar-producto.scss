@@ -1,0 +1,63 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); // Oscurece el fondo
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100; // Por encima de todo
+  backdrop-filter: blur(4px); // Efecto borroso elegante
+}
+
+.modal-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  animation: scaleIn 0.2s ease-out;
+
+  h3 {
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+  }
+
+  p {
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.4;
+    strong { color: #2c3e50; }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.1s;
+
+      &:active { transform: scale(0.95); }
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+
+    .btn-danger { background: #e74c3c; color: white; &:hover { background: #c0392b; } }
+    .btn-secondary { background: #ecf0f1; color: #7f8c8d; &:hover { background: #dcdde1; } }
+  }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

@@ -1,0 +1,16 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="warning-icon">⚠️</div>
+    <h3>¿Eliminar Repuesto?</h3>
+    <p>¿Estás seguro de eliminar <strong>{{ productoNombre }}</strong>? Esta acción no se puede deshacer.</p>
+    
+    <div class="modal-actions">
+      <button class="btn-danger" (click)="confirmar()" [disabled]="loading">
+        {{ loading ? 'Eliminando...' : 'Sí, Eliminar' }}
+      </button>
+      <button class="btn-secondary" (click)="cancelar.emit()" [disabled]="loading">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
