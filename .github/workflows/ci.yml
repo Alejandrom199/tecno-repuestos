@@ -65,11 +65,13 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/tecno-back:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/tecno-back:${{ env.APP_VERSION }}
 
-
     - name: Build & Push Frontend
       run: |
+        # El punto final (.) es el CONTEXTO (la raíz del proyecto)
+        # -f apunta al Dockerfile que está dentro de la carpeta frontend
         docker build -t ${{ secrets.DOCKER_USERNAME }}/tecno-front:latest \
                       -t ${{ secrets.DOCKER_USERNAME }}/tecno-front:${{ env.APP_VERSION }} \
-                      ./frontend
+                      -f frontend/Dockerfile . 
+        
         docker push ${{ secrets.DOCKER_USERNAME }}/tecno-front:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/tecno-front:${{ env.APP_VERSION }}
