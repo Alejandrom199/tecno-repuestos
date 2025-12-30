@@ -1,10 +1,10 @@
 const authService = require('../services/auth.service');
 const response = require('../utils/response');
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 exports.registrar = async (req, res, next) => {
     try {
-        
-        //console.log('CONTROLLER', req.body)
         const usuario = await authService.registrar(req.body);
         response.success(req, res, 201, 'Usuario registrado con éxito', { username: usuario.username });
     } catch (error) {
@@ -19,8 +19,6 @@ exports.login = async (req, res, next) => {
         
         // Llamamos al servicio para validar (asumo que 'resultado' trae { usuario, token })
         const resultado = await authService.login(username, password);
-
-        const isProduction = process.env.NODE_ENV === 'production'
 
         res.cookie('token', resultado.token, {
             httpOnly: true,    // Impide que JavaScript acceda al token (Seguridad XSS)
