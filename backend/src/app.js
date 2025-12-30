@@ -19,7 +19,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:4200', // Desarrollo
-  'https://tu-sitio-en.netlify.app' // URL real de tu frontend en Netlify
+  'https://tecno-repuestos.netlify.app' // URL real de tu frontend en Netlify
 ];
 
 app.use(cors({
