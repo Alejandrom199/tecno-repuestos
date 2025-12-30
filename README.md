@@ -1,55 +1,76 @@
 # 🛠️ Sistema Tecno Repuestos S.A.
 
-Este repositorio contiene la solución integral para la gestión de repuestos, construida con una arquitectura moderna basada en microservicios contenedorizados.
+Este repositorio contiene una solución integral para la gestión de repuestos, construida con una arquitectura de microservicios contenedorizados y un flujo de despliegue continuo (CI/CD) hacia la nube.
 
 ---
 
 ## 🏗️ Estructura del Proyecto
 
-El proyecto está organizado como un **monorepo** para facilitar la orquestación de todos los servicios:
+El proyecto está organizado como un **monorepo** para facilitar la orquestación y el despliegue:
 
 * **`/backend`**: API REST construida con **Node.js, Express y Sequelize**. Sigue una arquitectura de 3 capas (Routes, Controllers, Services).
-* **`/frontend`**: Interfaz de usuario desarrollada en **Angular**.
-* **`docker-compose.yml`**: Orquestador principal que levanta la base de datos MySQL, el Backend, el Frontend y el Proxy Inverso.
-* **`nginx.conf`**: Configuración del servidor web que unifica el sistema y gestiona el tráfico mediante un Reverse Proxy.
+* **`/frontend`**: Interfaz de usuario desarrollada en **Angular 18+**, optimizada para comunicación segura con el backend mediante interceptores.
+* **`.github/workflows`**: Automatización de pruebas y publicación de imágenes en **Docker Hub**.
 
 ---
 
-## 🚀 Despliegue en Producción (Docker)
+## 🌐 Arquitectura de Producción (Multi-Cloud)
 
-Esta es la forma recomendada para desplegar en tu servidor **Debian**. Gracias a la segmentación de redes de Docker, el sistema emula una **VPC** donde los componentes críticos están protegidos.
+El sistema utiliza un entorno distribuido para garantizar escalabilidad y seguridad:
+
+* **Frontend**: Desplegado en **Netlify** con soporte para Single Page Application (SPA).
+* **Backend**: Ejecutándose en **Render** mediante contenedores Docker.
+* **Base de Datos**: **MySQL** gestionado de forma independiente en **Aiven**.
+* **Seguridad**: 
+    * Gestión de sesiones mediante cookies **HttpOnly**.
+    * Políticas de **CORS** restringidas para dominios específicos.
+    * Configuración `SameSite: None` y `Secure` para permitir el intercambio de tokens entre nubes.
+
+---
+
+## 🚀 Despliegue Local (Docker Compose)
+
+Esta configuración permite replicar el sistema completo en un entorno local o servidor Debian.
 
 ### Requisitos Previos
-* Docker y Docker Compose plugin instalados.
-* Archivo `.env` configurado en la raíz del proyecto.
+* Docker y Docker Compose instalado.
+* Archivo `.env` en la raíz con las credenciales necesarias.
 
 ### Pasos para iniciar
-1.  **Configurar el entorno**: Crea un archivo `.env` en la raíz con las credenciales de base de datos y JWT.
+1.  **Configurar el entorno**: Crea un archivo `.env` con `DATABASE_URL`, `JWT_SECRET` y `NODE_ENV`.
 2.  **Levantar el sistema**:
     ```bash
     docker compose up -d --build
     ```
 3.  **Acceso**:
-    * **Frontend**: `http://tu-ip-o-dominio/`
-    * **Backend API**: `http://tu-ip-o-dominio/api/`
+    * **Frontend**: `http://localhost:4200`
+    * **Backend API**: `http://localhost:3000/api`
 
 ---
 
-## 🔐 Seguridad y Red (Concepto VPC)
+## 🔐 CI/CD y Calidad de Código
 
-El sistema utiliza un aislamiento de red mediante **Docker Networks**:
+El proyecto integra **GitHub Actions** para asegurar un ciclo de vida de desarrollo profesional:
 
-* **`frontend_net`**: Red de acceso público. Aquí conviven el Proxy y el Frontend.
-* **`backend_net`**: Red **privada interna**. Aquí reside la base de datos MySQL. 
-    > **Nota:** Ningún puerto de la base de datos está expuesto al exterior. Solo el contenedor del Backend tiene permiso para comunicarse con ella.
+1.  **Validación**: Cada `push` dispara pruebas unitarias en el backend para asegurar la integridad de la lógica.
+2.  **Contenedorización**: Se generan imágenes automáticas en **Docker Hub** con tags de versión (ej. `v1.1.0`).
+3.  **Despliegue Automático**: Una vez superadas las pruebas, Render y Netlify actualizan los servicios de producción sin intervención manual.
 
 ---
 
 ## 🧪 Desarrollo y Pruebas
 
 ### Backend
-Para ejecutar pruebas unitarias y asegurar la calidad de la lógica de negocio:
+Para ejecutar las pruebas unitarias localmente:
 ```bash
 cd backend
 npm install
 npm test
+```
+### Frontend
+Para iniciar el servidor de desarrollo:
+```bash
+cd frontend
+npm install
+npm start
+```

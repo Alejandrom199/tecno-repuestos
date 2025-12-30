@@ -20,12 +20,12 @@ exports.login = async (req, res, next) => {
         // Llamamos al servicio para validar (asumo que 'resultado' trae { usuario, token })
         const resultado = await authService.login(username, password);
 
-        // CONFIGURACIÓN DE LA COOKIE
-        // Esto hace que el navegador guarde el token automáticamente
+        const isProduction = process.env.NODE_ENV === 'production'
+
         res.cookie('token', resultado.token, {
             httpOnly: true,    // Impide que JavaScript acceda al token (Seguridad XSS)
-            secure: false,     // Ponlo en true solo si usas HTTPS (producción)
-            sameSite: 'lax',   // Necesario para que funcione entre localhost:3000 y 4200
+            secure: isProduction,     // Ponlo en true solo si usas HTTPS (producción)
+            sameSite: isProduction ? 'none' : 'lax',   // Necesario para que funcione entre localhost:3000 y 4200
             maxAge: 3600000    // La cookie expira en 1 hora
         });
 
@@ -39,8 +39,8 @@ exports.login = async (req, res, next) => {
 exports.logout = (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: false,
-        sameSite: 'lax'
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax'
     });
     // Usamos tu utilidad de respuesta para mantener la consistencia
     response.success(req, res, 200, 'Sesión cerrada correctamente');
